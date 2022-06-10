@@ -49,7 +49,7 @@ const price = formattedPrice(totalPrice);
           class="flex flex-col gap-10 m-10"
           :class="hasCartItems && 'mb-32'"
         >
-          <div class="flex flex-col gap-8">
+          <div v-if="foods.length" class="flex flex-col gap-8">
             <MenuGroupLabel label="Makanan" :icon="FoodsIcon" />
             <ul class="grid grid-cols-2 gap-8">
               <li v-for="food of foods" :key="food.id">
@@ -62,7 +62,7 @@ const price = formattedPrice(totalPrice);
             />
           </div>
 
-          <div class="flex flex-col gap-8">
+          <div v-if="drinks.length" class="flex flex-col gap-8">
             <MenuGroupLabel label="Minuman" :icon="DrinkIcon" />
             <ul class="grid grid-cols-2 gap-8">
               <li v-for="drink of drinks" :key="drink.id">
