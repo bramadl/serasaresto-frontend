@@ -6,6 +6,7 @@ import {
   DialogPanel,
   DialogTitle,
 } from "@headlessui/vue";
+import { ref } from "vue";
 
 defineProps({
   isOpen: {
@@ -14,9 +15,16 @@ defineProps({
   },
 });
 
-defineEmits<{
+const emits = defineEmits<{
   (e: "close"): void;
+  (e: "update:note", value: string): void;
 }>();
+
+const note = ref<string>("");
+const onSetNote = () => {
+  emits("update:note", note.value);
+  emits("close");
+};
 </script>
 
 <template>
@@ -48,29 +56,36 @@ defineEmits<{
             leave-to="opacity-0 scale-95"
           >
             <DialogPanel
-              class="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
+              class="w-full max-w-md transform overflow-hidden rounded-lg bg-white text-left align-middle shadow-xl transition-all"
             >
               <DialogTitle
                 as="h3"
-                class="text-lg font-medium leading-6 text-gray-900"
+                class="flex items-center justify-center font-semibold text-xl text-white bg-green h-12"
               >
-                Payment successful
+                Catatan
               </DialogTitle>
-              <div class="mt-2">
-                <p class="text-sm text-gray-500">
-                  Your payment has been successfully submitted. We’ve sent you
-                  an email with all of the details of your order.
-                </p>
-              </div>
 
-              <div class="mt-4">
-                <button
-                  type="button"
-                  class="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                  @click="$emit('close')"
-                >
-                  Got it, thanks!
-                </button>
+              <div class="p-4">
+                <textarea
+                  v-model="note"
+                  class="block w-full h-40 resize-y outline-none focus:outline-none border border-icon placeholder-icon text-sm text-primary p-4 rounded"
+                  placeholder="Tulis tambahan anda..."
+                />
+
+                <div class="mt-4 flex items-center justify-end gap-4">
+                  <button
+                    class="block border border-green text-sm text-green font-medium w-[100px] h-10 rounded-lg"
+                    @click="$emit('close')"
+                  >
+                    Batal
+                  </button>
+                  <button
+                    class="block border border-green bg-green text-sm text-white font-medium w-[100px] h-10 rounded-lg"
+                    @click="onSetNote"
+                  >
+                    OK
+                  </button>
+                </div>
               </div>
             </DialogPanel>
           </TransitionChild>

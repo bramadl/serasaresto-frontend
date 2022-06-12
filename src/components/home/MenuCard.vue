@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import { usePriceFormatter } from "@/composables/usePriceFormatter";
 
 import DecrementAmountIcon from "../icons/DecrementAmountIcon.vue";
 import IncrementAmountIcon from "../icons/IncrementAmountIcon.vue";
 import { useCarts } from "@/composables/useCarts";
+import NoteModal from "../checkout/NoteModal.vue";
+import type { IMenu } from "@/interfaces/IMenu";
 
 const props = defineProps({
   id: {
@@ -45,15 +47,28 @@ defineEmits<{
 }>();
 
 const { formattedPrice } = usePriceFormatter();
-const { cart } = useCarts();
+const { cart, updateItem } = useCarts();
+
+const isOpen = ref<boolean>(false);
 
 const menuOnCartQuantity = computed<number>(() => {
   const item = cart.cartItems.find((item) => item.menu.id === props.id);
-  if (!item) {
-    return 0;
-  }
+  if (!item) return 0;
   return item.quantity;
 });
+
+const menuOnCartNote = computed<string>(() => {
+  const item = cart.cartItems.find((item) => item.menu.id === props.id);
+  if (!item) return "";
+  return item.note;
+});
+
+const setMenuOnCartNote = async (value: string) => {
+  const item = cart.cartItems.find((item) => item.menu.id === props.id);
+  if (!item) return;
+  item.note = value;
+  updateItem(props as IMenu, { quantity: item.quantity, note: value.trim() });
+};
 </script>
 
 <template>
@@ -76,10 +91,19 @@ const menuOnCartQuantity = computed<number>(() => {
       </div>
     </div>
 
-    <textarea
-      class="block w-full focus:outline-none p-2 resize-y bg-transparent border-b border-read-only placeholder-placeholder font-light text-sm"
-      :disabled="!inStock"
-      placeholder="Catatan..."
+    <button
+      class="flex items-start w-full focus:outline-none py-2 bg-transparent border-b border-read-only focus:border-green text-placeholder font-light text-sm text-left h-12 transition ease-out duration-300"
+      :disabled="!inStock || menuOnCartQuantity === 0"
+      @click="isOpen = true"
+    >
+      {{ menuOnCartNote || "Catatan..." }}
+    </button>
+
+    <NoteModal
+      :is-open="isOpen"
+      :value="menuOnCartNote"
+      @update:note="setMenuOnCartNote"
+      @close="isOpen = false"
     />
 
     <div v-if="inStock" class="flex items-center justify-between px-10">

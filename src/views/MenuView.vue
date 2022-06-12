@@ -132,7 +132,10 @@ onMounted(() => {
     </div>
   </HomeLayout>
 
-  <BaseFloatingButton v-if="hasCartItems">
+  <BaseFloatingButton
+    v-if="hasCartItems"
+    @click="$router.push({ name: 'checkout' })"
+  >
     <CartIcon fill="white" />
     <span class="font-semibold text-white text-sm">
       Tambahkan Item - {{ price }}
