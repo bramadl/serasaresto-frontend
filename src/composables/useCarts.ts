@@ -32,10 +32,36 @@ export function useCarts() {
         cart_id: cart.id,
         note: "", // since adding and making notes are in the different cycle.
       });
-      if (response.status) await fetchCart();
+      if (response.status === 201) await fetchCart();
     } catch (err) {
       alertErrorResponse(err);
       cartItemMenu && cartItemMenu.quantity++;
+    }
+  };
+
+  const updateItem = async (
+    menu: IMenu,
+    { quantity, note }: { quantity: number; note: string }
+  ) => {
+    const cartItemMenu = cart.cartItems.find(
+      (cartItem) => cartItem.menu.id === menu.id
+    );
+    if (!cartItemMenu) return;
+    const tempNote = cartItemMenu.note;
+    cartItemMenu.quantity = quantity;
+    cartItemMenu.note = note;
+
+    try {
+      const response = await $cartService.updateItemFromCart(menu.id, {
+        quantity,
+        note,
+      });
+
+      if (response.status === 200) await fetchCart();
+    } catch (err) {
+      alertErrorResponse(err);
+      cartItemMenu.quantity = quantity - 1;
+      cartItemMenu.note = tempNote;
     }
   };
 
@@ -47,7 +73,7 @@ export function useCarts() {
 
     try {
       const response = await $cartService.removeItemFromCart(menu.id);
-      if (response.status) await fetchCart();
+      if (response.status === 204) await fetchCart();
     } catch (err) {
       alertErrorResponse(err);
       cartItemMenu && cartItemMenu.quantity++;
@@ -58,6 +84,7 @@ export function useCarts() {
     cart,
     fetchCart,
     addItem,
+    updateItem,
     removeItem,
   };
 }

@@ -2,7 +2,6 @@ import type { AxiosInstance } from "axios";
 
 interface BaseItemPayload {
   note?: string;
-  cart_id: string;
 }
 
 interface UpdateItemPayload extends BaseItemPayload {
@@ -11,6 +10,7 @@ interface UpdateItemPayload extends BaseItemPayload {
 
 interface AddItemPayload extends BaseItemPayload {
   menu_id: string;
+  cart_id: string;
 }
 
 export default ($axios: AxiosInstance) => ({
@@ -41,8 +41,7 @@ export default ($axios: AxiosInstance) => ({
       `/carts/items/${menuId}`,
       {
         quantity: payload.quantity,
-        note: payload.quantity,
-        cart_id: payload.cart_id,
+        note: payload.note,
       },
       {
         headers: {

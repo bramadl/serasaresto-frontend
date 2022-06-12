@@ -24,7 +24,7 @@ const {
   setSearch,
   incrementPage,
 } = useMenu();
-const { cart, fetchCart, addItem, removeItem } = useCarts();
+const { cart, fetchCart, addItem, updateItem, removeItem } = useCarts();
 const { formattedPrice } = usePriceFormatter();
 
 const hasMoreFoods = computed<boolean>(() => {
@@ -46,7 +46,10 @@ const onAddItem = (menu: IMenu) => {
   });
 
   if (menuFromCart) {
-    console.log("Update from cart");
+    updateItem(menu, {
+      quantity: menuFromCart.quantity + 1,
+      note: menuFromCart.note,
+    });
   } else {
     addItem(menu);
   }
@@ -59,7 +62,10 @@ const onRemoveItem = (menu: IMenu) => {
 
   if (menuFromCart) {
     if (menuFromCart.quantity !== 1) {
-      console.log("Update from cart");
+      updateItem(menu, {
+        quantity: menuFromCart.quantity - 1,
+        note: menuFromCart.note,
+      });
     } else {
       removeItem(menu);
     }
