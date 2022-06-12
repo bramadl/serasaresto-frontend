@@ -1,17 +1,8 @@
 import { $menuService } from "@/api";
 import type { IApiError } from "@/interfaces/IApiError";
+import type { IMenu } from "@/interfaces/IMenu";
 import type { AxiosError } from "axios";
 import { ref, watchEffect } from "vue";
-
-interface IMenu {
-  id: string;
-  thumbnail: string;
-  title: string;
-  description: string;
-  price: number;
-  inStock: boolean;
-  type: "makanan" | "minuman";
-}
 
 interface IPagination {
   hasNextItems?: boolean;

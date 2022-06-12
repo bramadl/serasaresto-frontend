@@ -1,10 +1,12 @@
 <script setup lang="ts">
+import { computed } from "vue";
 import { usePriceFormatter } from "@/composables/usePriceFormatter";
 
 import DecrementAmountIcon from "../icons/DecrementAmountIcon.vue";
 import IncrementAmountIcon from "../icons/IncrementAmountIcon.vue";
+import { useCarts } from "@/composables/useCarts";
 
-defineProps({
+const props = defineProps({
   id: {
     type: String,
     required: true,
@@ -37,7 +39,21 @@ defineProps({
   },
 });
 
+defineEmits<{
+  (e: "addItem"): void;
+  (e: "removeItem"): void;
+}>();
+
 const { formattedPrice } = usePriceFormatter();
+const { cart } = useCarts();
+
+const menuOnCartQuantity = computed<number>(() => {
+  const item = cart.cartItems.find((item) => item.menu.id === props.id);
+  if (!item) {
+    return 0;
+  }
+  return item.quantity;
+});
 </script>
 
 <template>
@@ -68,13 +84,15 @@ const { formattedPrice } = usePriceFormatter();
 
     <div v-if="inStock" class="flex items-center justify-between px-10">
       <button>
-        <DecrementAmountIcon />
+        <DecrementAmountIcon @click="$emit('removeItem')" />
       </button>
 
-      <span class="text-xl text-secondary">0</span>
+      <span class="text-xl text-secondary">
+        {{ menuOnCartQuantity }}
+      </span>
 
       <button>
-        <IncrementAmountIcon />
+        <IncrementAmountIcon @click="$emit('addItem')" />
       </button>
     </div>
 

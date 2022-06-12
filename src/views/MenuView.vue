@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { computed, onMounted } from "vue";
 import { useMenu } from "@/composables/useMenu";
 import { usePriceFormatter } from "@/composables/usePriceFormatter";
 
@@ -12,6 +13,8 @@ import LoadMoreMenuButton from "../components/home/LoadMoreMenuButton.vue";
 import MenuCard from "../components/home/MenuCard.vue";
 import CartIcon from "../components/icons/CartIcon.vue";
 import BaseFloatingButton from "../components/base/BaseFloatingButton.vue";
+import { useCarts } from "@/composables/useCarts";
+import type { IMenu } from "@/interfaces/IMenu";
 
 const {
   drinks,
@@ -22,14 +25,43 @@ const {
   setSearch,
   incrementPage,
 } = useMenu();
+const { cart, fetchCart, addItem } = useCarts();
 const { formattedPrice } = usePriceFormatter();
 
-const hasMoreFoods = foodsPagination.value.hasNextItems;
-const hasMoreDrinks = drinksPagination.value.hasNextItems;
-const hasCartItems = false;
+const hasMoreFoods = computed<boolean>(() => {
+  return foodsPagination.value.hasNextItems as boolean;
+});
+const hasMoreDrinks = computed<boolean>(() => {
+  return drinksPagination.value.hasNextItems as boolean;
+});
+const hasCartItems = computed<boolean>(() => {
+  return Boolean(cart.cartItems.length);
+});
+const price = computed<string>(() => {
+  return formattedPrice(cart.total);
+});
 
-const totalPrice = 80000;
-const price = formattedPrice(totalPrice);
+const onAddItem = (menu: IMenu) => {
+  const menuFromCart = cart.cartItems.find((m) => {
+    return m.menu.id === menu.id;
+  });
+
+  if (menuFromCart) {
+    // update item from cart
+    console.log("Update from cart");
+  } else {
+    // add item to cart
+    addItem(menu);
+  }
+};
+
+const onRemoveItem = (menu: IMenu) => {
+  console.log(menu);
+};
+
+onMounted(() => {
+  fetchCart();
+});
 </script>
 
 <template>
@@ -53,7 +85,11 @@ const price = formattedPrice(totalPrice);
             <MenuGroupLabel label="Makanan" :icon="FoodsIcon" />
             <ul class="grid grid-cols-2 gap-8">
               <li v-for="food of foods" :key="food.id">
-                <MenuCard v-bind="food" />
+                <MenuCard
+                  v-bind="food"
+                  @add-item="onAddItem(food)"
+                  @remove-item="onRemoveItem(food)"
+                />
               </li>
             </ul>
             <LoadMoreMenuButton
@@ -66,7 +102,11 @@ const price = formattedPrice(totalPrice);
             <MenuGroupLabel label="Minuman" :icon="DrinkIcon" />
             <ul class="grid grid-cols-2 gap-8">
               <li v-for="drink of drinks" :key="drink.id">
-                <MenuCard v-bind="drink" />
+                <MenuCard
+                  v-bind="drink"
+                  @add-item="onAddItem(drink)"
+                  @remove-item="onRemoveItem(drink)"
+                />
               </li>
             </ul>
             <LoadMoreMenuButton
