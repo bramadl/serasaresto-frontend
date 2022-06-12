@@ -8,7 +8,11 @@ import {
 } from "@headlessui/vue";
 import { ref } from "vue";
 
-defineProps({
+const props = defineProps({
+  value: {
+    type: String,
+    default: null,
+  },
   isOpen: {
     type: Boolean,
     default: false,
@@ -20,7 +24,7 @@ const emits = defineEmits<{
   (e: "update:note", value: string): void;
 }>();
 
-const note = ref<string>("");
+const note = ref<string>(props.value);
 const onSetNote = () => {
   emits("update:note", note.value);
   emits("close");

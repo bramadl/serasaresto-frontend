@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { onMounted } from "vue";
 
 import HomeLayout from "../layouts/HomeLayout.vue";
 import MenuGroupLabel from "../components/home/MenuGroupLabel.vue";
@@ -8,13 +8,11 @@ import PaymentIcon from "../components/icons/PaymentIcon.vue";
 import BaseFloatingButton from "../components/base/BaseFloatingButton.vue";
 
 import DotIcon from "../components/icons/DotIcon.vue";
-import NoteModal from "../components/checkout/NoteModal.vue";
 import CheckoutItemList from "../components/checkout/CheckoutItemList.vue";
-import EditIcon from "../components/icons/EditIcon.vue";
-import DecrementAmountIcon from "../components/icons/DecrementAmountIcon.vue";
-import IncrementAmountIcon from "../components/icons/IncrementAmountIcon.vue";
+import { useCarts } from "@/composables/useCarts";
 
-const isOpen = ref<boolean>(true);
+const { cart, fetchCart } = useCarts();
+onMounted(fetchCart);
 </script>
 
 <template>
@@ -30,38 +28,10 @@ const isOpen = ref<boolean>(true);
               style="box-shadow: 2px 0px 16px 0px #012f2d0a"
             >
               <ul class="flex flex-col gap-6">
-                <li v-for="item in 2" :key="item">
-                  <CheckoutItemList>
-                    <template #description>
-                      <span class="font-light text-xs text-secondary">
-                        Catatan: Tidak terlalu pedas
-                      </span>
-                      <button
-                        class="focus:outline-none"
-                        type="button"
-                        @click="isOpen = true"
-                      >
-                        <EditIcon />
-                      </button>
-                    </template>
-
-                    <template #amount>
-                      <div class="flex items-center gap-4">
-                        <DecrementAmountIcon />
-                        <span class="font-semibold text-sm text-secondary">
-                          2
-                        </span>
-                        <IncrementAmountIcon />
-                      </div>
-                      <p class="font-semibold text-sm text-primary">
-                        Rp 40.000
-                      </p>
-                    </template>
-                  </CheckoutItemList>
+                <li v-for="(cartItem, index) in cart.cartItems" :key="index">
+                  <CheckoutItemList :cart-item="cartItem" />
                 </li>
               </ul>
-
-              <NoteModal :is-open="isOpen" @close="isOpen = false" />
 
               <div class="mt-10 flex items-center justify-between">
                 <p class="font-semibold text-sm text-primary">Total</p>

@@ -1,4 +1,30 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { ref } from "vue";
+
+import NoteModal from "./NoteModal.vue";
+import EditIcon from "../../components/icons/EditIcon.vue";
+import DecrementAmountIcon from "../../components/icons/DecrementAmountIcon.vue";
+import IncrementAmountIcon from "../../components/icons/IncrementAmountIcon.vue";
+
+defineProps({
+  cartItem: {
+    type: Object,
+    default: () => {
+      return {};
+    },
+  },
+  isOpen: {
+    type: Boolean,
+    default: false,
+  },
+});
+
+defineEmits<{
+  (e: "close"): void;
+}>();
+
+const isOpen = ref<boolean>(false);
+</script>
 
 <template>
   <div
@@ -12,11 +38,27 @@
     <div class="flex-1 flex flex-col gap-2">
       <p class="font-semibold text-sm">Prawn with Salad</p>
       <p class="flex items-center gap-2">
-        <slot name="description" />
+        <span class="font-light text-xs text-secondary">
+          Catatan: {{ cartItem.note || "-" }}
+        </span>
+        <button class="focus:outline-none" type="button" @click="isOpen = true">
+          <EditIcon />
+        </button>
       </p>
       <div class="flex items-center justify-between">
-        <slot name="amount" />
+        <div class="flex items-center gap-4">
+          <DecrementAmountIcon />
+          <span class="font-semibold text-sm text-secondary"> 2 </span>
+          <IncrementAmountIcon />
+        </div>
+        <p class="font-semibold text-sm text-primary">Rp 40.000</p>
       </div>
     </div>
+
+    <NoteModal
+      :is-open="isOpen"
+      :value="cartItem.note"
+      @close="isOpen = false"
+    />
   </div>
 </template>
