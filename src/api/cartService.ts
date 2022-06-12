@@ -1,5 +1,18 @@
 import type { AxiosInstance } from "axios";
 
+interface BaseItemPayload {
+  note?: string;
+  cart_id: string;
+}
+
+interface UpdateItemPayload extends BaseItemPayload {
+  quantity: number;
+}
+
+interface AddItemPayload extends BaseItemPayload {
+  menu_id: string;
+}
+
 export default ($axios: AxiosInstance) => ({
   getCarts() {
     return $axios.get("/carts", {
@@ -8,21 +21,28 @@ export default ($axios: AxiosInstance) => ({
       },
     });
   },
-  addItemToCart({
-    menu_id,
-    note,
-    cart_id,
-  }: {
-    menu_id: string;
-    note: string;
-    cart_id: string;
-  }) {
+  addItemToCart({ menu_id, note, cart_id }: AddItemPayload) {
     return $axios.post(
       "/carts/items",
       {
         menu_id,
         note,
         cart_id,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("table_token")}`,
+        },
+      }
+    );
+  },
+  updateItemFromCart(menuId: string, payload: UpdateItemPayload) {
+    return $axios.put(
+      `/carts/items/${menuId}`,
+      {
+        quantity: payload.quantity,
+        note: payload.quantity,
+        cart_id: payload.cart_id,
       },
       {
         headers: {
