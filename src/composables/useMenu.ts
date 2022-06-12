@@ -1,7 +1,6 @@
 import { $menuService } from "@/api";
-import type { IApiError } from "@/interfaces/IApiError";
+import { alertErrorResponse } from "@/helpers/AlertErrorResponse";
 import type { IMenu } from "@/interfaces/IMenu";
-import type { AxiosError } from "axios";
 import { ref, watchEffect } from "vue";
 
 interface IPagination {
@@ -64,17 +63,7 @@ export function useMenu() {
       drinks.value = drinksMenu;
       drinksPagination.value = drinksPaginationResponse;
     } catch (err) {
-      const error = err as AxiosError;
-      if (error.response) {
-        if (error.response.data) {
-          const { message } = error.response.data as IApiError;
-          alert(message);
-        } else {
-          alert("Server sedang bermasalah. Silahkan coba beberapa saat lagi.");
-        }
-      } else {
-        alert("Server sedang bermasalah. Silahkan coba beberapa saat lagi.");
-      }
+      alertErrorResponse(err);
     }
   });
 

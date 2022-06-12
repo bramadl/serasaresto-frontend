@@ -4,9 +4,8 @@ import { useRoute, useRouter } from "vue-router";
 import { $customerService } from "@/api";
 import WelcomeTitle from "@/components/auth/WelcomeTitle.vue";
 import AuthSubmitButton from "@/components/auth/AuthSubmitButton.vue";
+import { alertErrorResponse } from "@/helpers/AlertErrorResponse";
 import TakenTableNumberMessage from "../components/auth/messages/TakenTableNumberMessage.vue";
-import type { AxiosError } from "axios";
-import type { IApiError } from "@/interfaces/IApiError";
 
 const token = ref<string | number>("");
 const customMessage = ref<string | undefined>("");
@@ -36,17 +35,7 @@ onMounted(async () => {
     );
     token.value = response.data.data.token;
   } catch (err) {
-    const error = err as AxiosError;
-    if (error.response) {
-      if (error.response.data) {
-        const { message } = error.response.data as IApiError;
-        alert(message);
-      } else {
-        alert("Server sedang bermasalah. Silahkan coba beberapa saat lagi.");
-      }
-    } else {
-      alert("Server sedang bermasalah. Silahkan coba beberapa saat lagi.");
-    }
+    alertErrorResponse(err);
     token.value = 0;
   }
 });

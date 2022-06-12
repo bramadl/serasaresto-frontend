@@ -1,4 +1,3 @@
-import { httpRequest } from "@/api/provider/httpRequest";
 import MenuView from "@/views/MenuView.vue";
 import { createRouter, createWebHistory } from "vue-router";
 

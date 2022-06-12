@@ -2,7 +2,8 @@
 import { computed, onMounted } from "vue";
 import { useMenu } from "@/composables/useMenu";
 import { usePriceFormatter } from "@/composables/usePriceFormatter";
-
+import { useCarts } from "@/composables/useCarts";
+import type { IMenu } from "@/interfaces/IMenu";
 import HomeLayout from "../layouts/HomeLayout.vue";
 import SidebarMenu from "../components/home/SidebarMenu.vue";
 import SearchMenuInput from "../components/home/SearchMenuInput.vue";
@@ -13,8 +14,6 @@ import LoadMoreMenuButton from "../components/home/LoadMoreMenuButton.vue";
 import MenuCard from "../components/home/MenuCard.vue";
 import CartIcon from "../components/icons/CartIcon.vue";
 import BaseFloatingButton from "../components/base/BaseFloatingButton.vue";
-import { useCarts } from "@/composables/useCarts";
-import type { IMenu } from "@/interfaces/IMenu";
 
 const {
   drinks,
@@ -25,7 +24,7 @@ const {
   setSearch,
   incrementPage,
 } = useMenu();
-const { cart, fetchCart, addItem } = useCarts();
+const { cart, fetchCart, addItem, removeItem } = useCarts();
 const { formattedPrice } = usePriceFormatter();
 
 const hasMoreFoods = computed<boolean>(() => {
@@ -47,16 +46,24 @@ const onAddItem = (menu: IMenu) => {
   });
 
   if (menuFromCart) {
-    // update item from cart
     console.log("Update from cart");
   } else {
-    // add item to cart
     addItem(menu);
   }
 };
 
 const onRemoveItem = (menu: IMenu) => {
-  console.log(menu);
+  const menuFromCart = cart.cartItems.find((m) => {
+    return m.menu.id === menu.id;
+  });
+
+  if (menuFromCart) {
+    if (menuFromCart.quantity !== 1) {
+      console.log("Update from cart");
+    } else {
+      removeItem(menu);
+    }
+  }
 };
 
 onMounted(() => {

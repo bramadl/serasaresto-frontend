@@ -31,4 +31,11 @@ export default ($axios: AxiosInstance) => ({
       }
     );
   },
+  removeItemFromCart(menuId: string) {
+    return $axios.delete(`/carts/items/${menuId}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("table_token")}`,
+      },
+    });
+  },
 });

@@ -1,12 +1,11 @@
 <script setup lang="ts">
+import { useRouter } from "vue-router";
 import { useAuth } from "@/composables/useAuth";
 import WelcomeTitle from "@/components/auth/WelcomeTitle.vue";
 import AuthForm from "@/components/auth/AuthForm.vue";
 import AuthSubmitButton from "@/components/auth/AuthSubmitButton.vue";
 import { $customerService } from "@/api";
-import type { AxiosError } from "axios";
-import type { IApiError } from "@/interfaces/IApiError";
-import { useRouter } from "vue-router";
+import { alertErrorResponse } from "@/helpers/AlertErrorResponse";
 
 const router = useRouter();
 const { username, token } = useAuth();
@@ -27,17 +26,7 @@ const onSubmit = async (event: Event) => {
     localStorage.setItem("table_token", tableToken);
     router.replace({ name: "menu", force: true });
   } catch (err) {
-    const error = err as AxiosError;
-    if (error.response) {
-      if (error.response.data) {
-        const { message } = error.response.data as IApiError;
-        alert(message);
-      } else {
-        alert("Server sedang bermasalah. Silahkan coba beberapa saat lagi.");
-      }
-    } else {
-      alert("Server sedang bermasalah. Silahkan coba beberapa saat lagi.");
-    }
+    alertErrorResponse(err);
   }
 };
 </script>
