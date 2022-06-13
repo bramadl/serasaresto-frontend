@@ -8,7 +8,7 @@ export default ($axios: AxiosInstance) => ({
       },
     });
   },
-  addItemToCart(payload: { menu_id: string; cart_id: string; note?: string; }) {
+  addItemToCart(payload: { menu_id: string; cart_id: string; note?: string }) {
     return $axios.post(
       "/carts/items",
       {
