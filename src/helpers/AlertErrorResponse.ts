@@ -1,9 +1,7 @@
-import { useRouter } from "vue-router";
 import type { AxiosError } from "axios";
 import type { IApiError } from "@/interfaces/IApiError";
 
 export const alertErrorResponse = (err: unknown) => {
-  const router = useRouter();
   const error = err as AxiosError;
   if (error.response) {
     if (error.response.data) {
@@ -12,11 +10,11 @@ export const alertErrorResponse = (err: unknown) => {
         localStorage.removeItem("customer_name");
         localStorage.removeItem("table_name");
         localStorage.removeItem("table_token");
-        return router.replace({ name: "login", force: true });
+        location.pathname = "/login";
+      } else {
+        const { message } = error.response.data as IApiError;
+        alert(message);
       }
-
-      const { message } = error.response.data as IApiError;
-      alert(message);
     } else {
       alert("Server sedang bermasalah. Silahkan coba beberapa saat lagi.");
     }

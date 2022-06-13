@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { onMounted } from "vue";
+import { RouterLink } from "vue-router";
 
 import { useCarts } from "@/composables/useCarts";
 import { usePriceFormatter } from "@/composables/usePriceFormatter";
@@ -35,22 +36,34 @@ onMounted(fetchCart);
               class="bg-white rounded-lg p-6"
               style="box-shadow: 2px 0px 16px 0px #012f2d0a"
             >
-              <ul class="flex flex-col gap-6">
-                <li v-for="(cartItem, index) in cart.cartItems" :key="index">
-                  <CheckoutItemList :cart-item="cartItem" />
-                </li>
-              </ul>
+              <template v-if="cart.cartItems.length">
+                <ul class="flex flex-col gap-6">
+                  <li
+                    v-for="cartItem in cart.cartItems"
+                    :key="cartItem.menu.id"
+                  >
+                    <CheckoutItemList :cart-item="cartItem" />
+                  </li>
+                </ul>
 
-              <div class="mt-10 flex items-center justify-between">
-                <p class="font-semibold text-sm text-primary">Total</p>
-                <p class="font-semibold text-sm text-primary">
-                  {{ formattedPrice(cart.total) }}
+                <div class="mt-10 flex items-center justify-between">
+                  <p class="font-semibold text-sm text-primary">Total</p>
+                  <p class="font-semibold text-sm text-primary">
+                    {{ formattedPrice(cart.total) }}
+                  </p>
+                </div>
+              </template>
+
+              <div v-else>
+                <p class="text-center text-primary">
+                  Anda tidak memiliki menu di keranjang
                 </p>
               </div>
             </div>
           </div>
 
           <div
+            v-if="cart.cartItems.length"
             class="bg-white rounded-lg p-6"
             style="box-shadow: 2px 0px 16px 0px #012f2d0a"
           >
@@ -68,8 +81,19 @@ onMounted(fetchCart);
     </div>
   </HomeLayout>
 
-  <BaseFloatingButton @click="onMakeOrder">
-    <PaymentIcon />
-    <span class="font-semibold text-white text-sm"> Lanjutkan Pembayaran </span>
-  </BaseFloatingButton>
+  <template v-if="cart.cartItems.length">
+    <BaseFloatingButton @click="onMakeOrder">
+      <PaymentIcon />
+      <span class="font-semibold text-white text-sm">
+        Lanjutkan Pembayaran
+      </span>
+    </BaseFloatingButton>
+  </template>
+  <template v-else>
+    <RouterLink :to="{ name: 'menu' }">
+      <BaseFloatingButton>
+        <span class="font-semibold text-white text-sm">Kembali ke menu</span>
+      </BaseFloatingButton>
+    </RouterLink>
+  </template>
 </template>
