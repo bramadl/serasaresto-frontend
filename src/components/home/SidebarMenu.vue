@@ -1,39 +1,15 @@
 <script setup lang="ts">
-import { RouterLink, useRouter } from "vue-router";
+import { RouterLink } from "vue-router";
 
+import { useLogout } from "@/composables/useLogout";
 import { useSidebar } from "@/composables/useSidebar";
+
 import OrderIcon from "../icons/OrderIcon.vue";
 import LogoutIcon from "../icons/LogoutIcon.vue";
 import MenuIcon from "../icons/MenuIcon.vue";
-import { $customerService } from "@/api";
-import type { AxiosError } from "axios";
-import type { IApiError } from "@/interfaces/IApiError";
 
-const router = useRouter();
+const { logout } = useLogout();
 const { isSidebarOpened, setIsSidebarOpened } = useSidebar();
-
-const logout = async () => {
-  const token = localStorage.getItem("table_token") as string;
-  try {
-    await $customerService.logout(token);
-    localStorage.removeItem("customer_name");
-    localStorage.removeItem("table_name");
-    localStorage.removeItem("table_token");
-    router.replace({ name: "login", force: true });
-  } catch (err) {
-    const error = err as AxiosError;
-    if (error.response) {
-      if (error.response.data) {
-        const { message } = error.response.data as IApiError;
-        alert(message);
-      } else {
-        alert("Server sedang bermasalah. Silahkan coba beberapa saat lagi.");
-      }
-    } else {
-      alert("Server sedang bermasalah. Silahkan coba beberapa saat lagi.");
-    }
-  }
-};
 </script>
 
 <template>

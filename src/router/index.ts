@@ -56,9 +56,6 @@ router.beforeEach(async (to, from, next) => {
   const isLoggedIn = Boolean(localStorage.getItem("table_token"));
 
   if (to.meta.requiresAuth && !isLoggedIn) {
-    // @TODO verify table token
-    // await httpRequest.get(url);
-
     return next({
       name: "login",
     });

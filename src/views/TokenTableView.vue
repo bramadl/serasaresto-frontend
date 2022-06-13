@@ -36,7 +36,7 @@ onMounted(async () => {
     token.value = response.data.data.token;
   } catch (err) {
     alertErrorResponse(err);
-    token.value = 0;
+    router.replace({ name: "login" });
   }
 });
 </script>

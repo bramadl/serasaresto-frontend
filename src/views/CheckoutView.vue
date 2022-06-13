@@ -16,6 +16,10 @@ import DotIcon from "../components/icons/DotIcon.vue";
 const { cart, fetchCart } = useCarts();
 const { formattedPrice } = usePriceFormatter();
 
+const onMakeOrder = () => {
+  alert("Buat orderan!");
+};
+
 onMounted(fetchCart);
 </script>
 
@@ -64,7 +68,7 @@ onMounted(fetchCart);
     </div>
   </HomeLayout>
 
-  <BaseFloatingButton>
+  <BaseFloatingButton @click="onMakeOrder">
     <PaymentIcon />
     <span class="font-semibold text-white text-sm"> Lanjutkan Pembayaran </span>
   </BaseFloatingButton>
