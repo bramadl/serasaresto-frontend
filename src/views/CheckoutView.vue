@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { onMounted } from "vue";
-import { RouterLink } from "vue-router";
+import { RouterLink, useRouter } from "vue-router";
 
+import { $orderService } from "@/api";
 import { useCarts } from "@/composables/useCarts";
 import { usePriceFormatter } from "@/composables/usePriceFormatter";
+import { alertErrorResponse } from "@/helpers/AlertErrorResponse";
 
 import HomeLayout from "../layouts/HomeLayout.vue";
 
@@ -16,9 +18,16 @@ import DotIcon from "../components/icons/DotIcon.vue";
 
 const { cart, fetchCart } = useCarts();
 const { formattedPrice } = usePriceFormatter();
+const router = useRouter();
 
-const onMakeOrder = () => {
-  //
+const onMakeOrder = async () => {
+  try {
+    const response = await $orderService.makeOrder();
+    const orderId = response.data.message;
+    router.replace({ name: "status", params: { id: orderId } });
+  } catch (err) {
+    alertErrorResponse(err);
+  }
 };
 
 onMounted(fetchCart);

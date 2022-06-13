@@ -34,7 +34,7 @@ const router = createRouter({
       },
     },
     {
-      path: "/status",
+      path: "/status/:id",
       name: "status",
       component: () => import("../views/OrderStatusView.vue"),
       meta: {

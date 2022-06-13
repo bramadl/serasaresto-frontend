@@ -21,6 +21,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  type: {
+    type: String,
+    default: "cart",
+  },
 });
 
 defineEmits<{
@@ -56,21 +60,33 @@ const onUpdateNote = (value: string) => {
         <span class="font-light text-xs text-secondary">
           Catatan: {{ cartItem.note || "-" }}
         </span>
-        <button class="focus:outline-none" type="button" @click="isOpen = true">
+        <button
+          v-if="type === 'cart'"
+          class="focus:outline-none"
+          type="button"
+          @click="isOpen = true"
+        >
           <EditIcon />
         </button>
       </p>
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-4">
-          <button @click="onRemoveItem(cartItemMenu)">
-            <DecrementAmountIcon />
-          </button>
-          <span class="font-semibold text-sm text-secondary">
-            {{ cartItem.quantity }}
-          </span>
-          <button @click="onAddItem(cartItemMenu)">
-            <IncrementAmountIcon />
-          </button>
+          <template v-if="type === 'cart'">
+            <button @click="onRemoveItem(cartItemMenu)">
+              <DecrementAmountIcon />
+            </button>
+            <span class="font-semibold text-sm text-secondary">
+              {{ cartItem.quantity }}
+            </span>
+            <button @click="onAddItem(cartItemMenu)">
+              <IncrementAmountIcon />
+            </button>
+          </template>
+          <template v-else>
+            <span class="font-semibold text-sm text-secondary">
+              x {{ cartItem.quantity }}
+            </span>
+          </template>
         </div>
         <p class="font-semibold text-sm text-primary">
           {{ formattedPrice(cartItemMenu.price * cartItem.quantity) }}
