@@ -18,7 +18,7 @@ const { cart, fetchCart } = useCarts();
 const { formattedPrice } = usePriceFormatter();
 
 const onMakeOrder = () => {
-  alert("Buat orderan!");
+  //
 };
 
 onMounted(fetchCart);
