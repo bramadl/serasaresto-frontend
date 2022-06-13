@@ -26,4 +26,15 @@ export default ($axios: AxiosInstance) => ({
       },
     });
   },
+  confirmOrder(id: string) {
+    return $axios.post(
+      `/orders/${id}/confirm`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("table_token")}`,
+        },
+      }
+    );
+  },
 });

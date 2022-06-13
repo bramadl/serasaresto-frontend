@@ -32,6 +32,7 @@ const { isSidebarOpened, setIsSidebarOpened } = useSidebar();
             class="flex items-center gap-2 rounded-l-full text-white px-10 py-2.5"
             :class="$route.name === 'menu' && 'bg-highlight'"
             to="/"
+            @click="setIsSidebarOpened"
           >
             <MenuIcon />
             <span>Menu</span>
@@ -40,6 +41,7 @@ const { isSidebarOpened, setIsSidebarOpened } = useSidebar();
             class="flex items-center gap-2 rounded-l-full text-white px-10 py-2.5"
             :class="$route.name === 'history' && 'bg-highlight'"
             to="/history"
+            @click="setIsSidebarOpened"
           >
             <OrderIcon />
             <span>Order</span>

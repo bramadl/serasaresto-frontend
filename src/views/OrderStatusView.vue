@@ -14,6 +14,8 @@ import FoodsIcon from "../components/icons/FoodsIcon.vue";
 import MenuGroupLabel from "../components/home/MenuGroupLabel.vue";
 import CheckoutItemList from "../components/checkout/CheckoutItemList.vue";
 import BaseStatusBadge from "../components/base/BaseStatusBadge.vue";
+import ConfirmOrderModal from "../components/checkout/ConfirmOrderModal.vue";
+import { alertErrorResponse } from "@/helpers/AlertErrorResponse";
 
 const route = useRoute();
 const router = useRouter();
@@ -26,8 +28,8 @@ const order = ref<IOrder>({
   status: "",
   total: 0,
 });
-
 const isLoading = ref<boolean>(true);
+const isOpen = ref<boolean>(false);
 
 const total = computed<number>(() => {
   return order.value.total;
@@ -37,10 +39,13 @@ const pph = computed<number>(() => {
   return (total.value * 11) / 100;
 });
 
+const orderId = computed(() => {
+  return route.params.id as string;
+});
+
 onMounted(async () => {
-  const orderId = route.params.id as string;
   try {
-    const response = await $orderService.viewOrder(orderId);
+    const response = await $orderService.viewOrder(orderId.value);
     const { data } = response.data;
     order.value = data;
   } catch (err) {
@@ -49,6 +54,17 @@ onMounted(async () => {
     isLoading.value = false;
   }
 });
+
+const onConfirm = async () => {
+  try {
+    await $orderService.confirmOrder(orderId.value);
+    order.value.status = "DONE";
+  } catch (err) {
+    alertErrorResponse(err);
+  } finally {
+    isOpen.value = false;
+  }
+};
 </script>
 
 <template>
@@ -112,6 +128,12 @@ onMounted(async () => {
             </div>
           </div>
         </section>
+
+        <ConfirmOrderModal
+          :is-open="isOpen"
+          @close="isOpen = false"
+          @confirm="onConfirm"
+        />
       </div>
     </div>
   </HomeLayout>
@@ -126,7 +148,9 @@ onMounted(async () => {
       Kembali Ke Menu
     </RouterLink>
     <button
-      class="flex-1 text-center py-3 px-4 rounded-lg bg-green text-white border-2 border-green"
+      class="flex-1 text-center py-3 px-4 rounded-lg bg-green disabled:bg-[#EAEAEA] disabled:border-[#DBDBDB] disabled:text-placeholder text-white border-2 border-green"
+      :disabled="order.status === 'DONE'"
+      @click="isOpen = true"
     >
       Konfirmasi Pesanan
     </button>

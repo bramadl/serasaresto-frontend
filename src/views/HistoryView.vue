@@ -13,7 +13,7 @@ import HomeLayout from "../layouts/HomeLayout.vue";
 import SidebarMenu from "../components/home/SidebarMenu.vue";
 import MenuGroupLabel from "../components/home/MenuGroupLabel.vue";
 import ClockIcon from "../components/icons/ClockIcon.vue";
-import SearchMenuInput from "../components/home/SearchMenuInput.vue";
+// import SearchMenuInput from "../components/home/SearchMenuInput.vue";
 import BaseStatusBadge from "../components/base/BaseStatusBadge.vue";
 import CheckoutItemList from "../components/checkout/CheckoutItemList.vue";
 
@@ -70,9 +70,9 @@ const parseDate = (date: Date) => {
       <SidebarMenu />
 
       <div class="flex-1 w-full h-full overflow-auto">
-        <div class="m-10">
+        <!-- <div class="m-10">
           <SearchMenuInput />
-        </div>
+        </div> -->
 
         <section class="flex flex-col gap-10 m-10">
           <div class="flex flex-col gap-8">
@@ -97,7 +97,7 @@ const parseDate = (date: Date) => {
                       {{ parseDate(order.created_at as Date) }}
                     </p>
                   </div>
-                  <BaseStatusBadge />
+                  <BaseStatusBadge :success="order.status === 'DONE'" />
                 </div>
 
                 <ul class="flex flex-col gap-8">
