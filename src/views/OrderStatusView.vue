@@ -3,6 +3,8 @@ import { computed, onMounted, ref } from "vue";
 import { RouterLink, useRoute, useRouter } from "vue-router";
 
 import { $orderService } from "@/api";
+import { usePriceFormatter } from "@/composables/usePriceFormatter";
+import { parseOrderNumber } from "@/helpers/ParseOrderNumber";
 import type { IOrder } from "@/interfaces/IOrder";
 
 import HomeLayout from "../layouts/HomeLayout.vue";
@@ -12,7 +14,6 @@ import FoodsIcon from "../components/icons/FoodsIcon.vue";
 import MenuGroupLabel from "../components/home/MenuGroupLabel.vue";
 import CheckoutItemList from "../components/checkout/CheckoutItemList.vue";
 import BaseStatusBadge from "../components/base/BaseStatusBadge.vue";
-import { usePriceFormatter } from "@/composables/usePriceFormatter";
 
 const route = useRoute();
 const router = useRouter();
@@ -63,7 +64,9 @@ onMounted(async () => {
             <div class="flex items-center justify-between">
               <p class="font-bold text-secondary text-sm">
                 Nomor Order :
-                <span class="text-primary"> #{{ order.number }} </span>
+                <span class="text-primary">
+                  {{ parseOrderNumber(order.number) }}
+                </span>
               </p>
 
               <BaseStatusBadge :success="order.status === 'DONE'" />

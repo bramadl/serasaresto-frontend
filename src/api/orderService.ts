@@ -19,4 +19,11 @@ export default ($axios: AxiosInstance) => ({
       },
     });
   },
+  getOrderHistories() {
+    return $axios.get(`/orders/histories`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("table_token")}`,
+      },
+    });
+  },
 });

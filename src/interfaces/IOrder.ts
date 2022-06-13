@@ -13,4 +13,5 @@ export interface IOrder {
   }[];
   total: number;
   number: number;
+  created_at?: Date;
 }
