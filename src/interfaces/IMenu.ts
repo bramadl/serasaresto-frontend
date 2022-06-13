@@ -1,7 +1,7 @@
 export type IMenu = {
   id: string;
   thumbnail: string;
-  title: string;
+  name: string;
   description: string;
   price: number;
   inStock: boolean;

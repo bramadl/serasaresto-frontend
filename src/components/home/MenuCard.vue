@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
+
+import { useCarts } from "@/composables/useCarts";
 import { usePriceFormatter } from "@/composables/usePriceFormatter";
+import type { IMenu } from "@/interfaces/IMenu";
 
 import DecrementAmountIcon from "../icons/DecrementAmountIcon.vue";
 import IncrementAmountIcon from "../icons/IncrementAmountIcon.vue";
-import { useCarts } from "@/composables/useCarts";
 import NoteModal from "../checkout/NoteModal.vue";
-import type { IMenu } from "@/interfaces/IMenu";
 
 const props = defineProps({
   id: {
@@ -17,7 +18,7 @@ const props = defineProps({
     type: String,
     required: true,
   },
-  title: {
+  name: {
     type: String,
     required: true,
   },
@@ -79,13 +80,13 @@ const setMenuOnCartNote = async (value: string) => {
   >
     <div class="flex items-center justify-between gap-4">
       <img
-        :alt="title"
+        :alt="name"
         class="flex-shrink-0 w-20 h-20 object-cover rounded-full"
         :class="!inStock && 'grayscale'"
         :src="thumbnail"
       />
       <div class="flex-1">
-        <p class="font-semibold text-sm">{{ title }}</p>
+        <p class="font-semibold text-sm">{{ name }}</p>
         <p class="my-2 text-xs text-secondary">{{ description }}</p>
         <p class="font-semibold text-sm">{{ formattedPrice(price) }}</p>
       </div>
@@ -107,16 +108,16 @@ const setMenuOnCartNote = async (value: string) => {
     />
 
     <div v-if="inStock" class="flex items-center justify-between px-10">
-      <button>
-        <DecrementAmountIcon @click="$emit('removeItem')" />
+      <button @click="$emit('removeItem')">
+        <DecrementAmountIcon />
       </button>
 
       <span class="text-xl text-secondary">
         {{ menuOnCartQuantity }}
       </span>
 
-      <button>
-        <IncrementAmountIcon @click="$emit('addItem')" />
+      <button @click="$emit('addItem')">
+        <IncrementAmountIcon />
       </button>
     </div>
 

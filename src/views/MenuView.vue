@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { computed, onMounted } from "vue";
+
+import { useCarts } from "@/composables/useCarts";
 import { useMenu } from "@/composables/useMenu";
 import { usePriceFormatter } from "@/composables/usePriceFormatter";
-import { useCarts } from "@/composables/useCarts";
-import type { IMenu } from "@/interfaces/IMenu";
+
 import HomeLayout from "../layouts/HomeLayout.vue";
+
 import SidebarMenu from "../components/home/SidebarMenu.vue";
 import SearchMenuInput from "../components/home/SearchMenuInput.vue";
 import FoodsIcon from "../components/icons/FoodsIcon.vue";
@@ -24,7 +26,7 @@ const {
   setSearch,
   incrementPage,
 } = useMenu();
-const { cart, fetchCart, addItem, updateItem, removeItem } = useCarts();
+const { cart, fetchCart, onAddItem, onRemoveItem } = useCarts();
 const { formattedPrice } = usePriceFormatter();
 
 const hasMoreFoods = computed<boolean>(() => {
@@ -39,38 +41,6 @@ const hasCartItems = computed<boolean>(() => {
 const price = computed<string>(() => {
   return formattedPrice(cart.total);
 });
-
-const onAddItem = (menu: IMenu) => {
-  const menuFromCart = cart.cartItems.find((m) => {
-    return m.menu.id === menu.id;
-  });
-
-  if (menuFromCart) {
-    updateItem(menu, {
-      quantity: menuFromCart.quantity + 1,
-      note: menuFromCart.note,
-    });
-  } else {
-    addItem(menu);
-  }
-};
-
-const onRemoveItem = (menu: IMenu) => {
-  const menuFromCart = cart.cartItems.find((m) => {
-    return m.menu.id === menu.id;
-  });
-
-  if (menuFromCart) {
-    if (menuFromCart.quantity !== 1) {
-      updateItem(menu, {
-        quantity: menuFromCart.quantity - 1,
-        note: menuFromCart.note,
-      });
-    } else {
-      removeItem(menu);
-    }
-  }
-};
 
 onMounted(() => {
   fetchCart();

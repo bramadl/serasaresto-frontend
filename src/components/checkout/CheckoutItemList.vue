@@ -1,12 +1,16 @@
 <script setup lang="ts">
 import { ref } from "vue";
 
-import NoteModal from "./NoteModal.vue";
+import { useCarts } from "@/composables/useCarts";
+import { usePriceFormatter } from "@/composables/usePriceFormatter";
+import type { IMenu } from "@/interfaces/IMenu";
+
 import EditIcon from "../../components/icons/EditIcon.vue";
 import DecrementAmountIcon from "../../components/icons/DecrementAmountIcon.vue";
 import IncrementAmountIcon from "../../components/icons/IncrementAmountIcon.vue";
+import NoteModal from "./NoteModal.vue";
 
-defineProps({
+const props = defineProps({
   cartItem: {
     type: Object,
     default: () => {
@@ -24,6 +28,17 @@ defineEmits<{
 }>();
 
 const isOpen = ref<boolean>(false);
+const cartItemMenu = ref<IMenu>(props.cartItem.menu);
+
+const { updateItem, onAddItem, onRemoveItem } = useCarts();
+const { formattedPrice } = usePriceFormatter();
+
+const onUpdateNote = (value: string) => {
+  updateItem(props.cartItem.menu, {
+    quantity: props.cartItem.quantity,
+    note: value.trim(),
+  });
+};
 </script>
 
 <template>
@@ -33,10 +48,10 @@ const isOpen = ref<boolean>(false);
     <img
       alt="title"
       class="flex-shrink-0 w-20 h-20 object-cover rounded-full"
-      src="https://images.unsplash.com/photo-1607532941433-304659e8198a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1556&q=80"
+      :src="cartItemMenu.thumbnail"
     />
     <div class="flex-1 flex flex-col gap-2">
-      <p class="font-semibold text-sm">Prawn with Salad</p>
+      <p class="font-semibold text-sm">{{ cartItemMenu.name }}</p>
       <p class="flex items-center gap-2">
         <span class="font-light text-xs text-secondary">
           Catatan: {{ cartItem.note || "-" }}
@@ -47,17 +62,26 @@ const isOpen = ref<boolean>(false);
       </p>
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-4">
-          <DecrementAmountIcon />
-          <span class="font-semibold text-sm text-secondary"> 2 </span>
-          <IncrementAmountIcon />
+          <button @click="onRemoveItem(cartItemMenu)">
+            <DecrementAmountIcon />
+          </button>
+          <span class="font-semibold text-sm text-secondary">
+            {{ cartItem.quantity }}
+          </span>
+          <button @click="onAddItem(cartItemMenu)">
+            <IncrementAmountIcon />
+          </button>
         </div>
-        <p class="font-semibold text-sm text-primary">Rp 40.000</p>
+        <p class="font-semibold text-sm text-primary">
+          {{ formattedPrice(cartItemMenu.price * cartItem.quantity) }}
+        </p>
       </div>
     </div>
 
     <NoteModal
       :is-open="isOpen"
       :value="cartItem.note"
+      @update:note="onUpdateNote"
       @close="isOpen = false"
     />
   </div>

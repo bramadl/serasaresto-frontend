@@ -1,8 +1,8 @@
+import { reactive } from "vue";
 import { $cartService } from "@/api";
 import { alertErrorResponse } from "@/helpers/AlertErrorResponse";
 import type { ICart } from "@/interfaces/ICart";
 import type { IMenu } from "@/interfaces/IMenu";
-import { reactive } from "vue";
 
 const cart = reactive<ICart>({
   id: "",
@@ -19,6 +19,38 @@ export function useCarts() {
     cart.cartItems = data.cartItems;
     cart.total = data.total;
   }
+
+  const onAddItem = (menu: IMenu) => {
+    const menuFromCart = cart.cartItems.find((m) => {
+      return m.menu.id === menu.id;
+    });
+
+    if (menuFromCart) {
+      updateItem(menu, {
+        quantity: menuFromCart.quantity + 1,
+        note: menuFromCart.note,
+      });
+    } else {
+      addItem(menu);
+    }
+  };
+
+  const onRemoveItem = (menu: IMenu) => {
+    const menuFromCart = cart.cartItems.find((m) => {
+      return m.menu.id === menu.id;
+    });
+
+    if (menuFromCart) {
+      if (menuFromCart.quantity !== 1) {
+        updateItem(menu, {
+          quantity: menuFromCart.quantity - 1,
+          note: menuFromCart.note,
+        });
+      } else {
+        removeItem(menu);
+      }
+    }
+  };
 
   const addItem = async (menu: IMenu) => {
     const cartItemMenu = cart.cartItems.find(
@@ -86,5 +118,7 @@ export function useCarts() {
     addItem,
     updateItem,
     removeItem,
+    onAddItem,
+    onRemoveItem,
   };
 }

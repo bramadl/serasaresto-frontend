@@ -1,17 +1,21 @@
 <script setup lang="ts">
 import { onMounted } from "vue";
 
+import { useCarts } from "@/composables/useCarts";
+import { usePriceFormatter } from "@/composables/usePriceFormatter";
+
 import HomeLayout from "../layouts/HomeLayout.vue";
+
+import BaseFloatingButton from "../components/base/BaseFloatingButton.vue";
+import CheckoutItemList from "../components/checkout/CheckoutItemList.vue";
 import MenuGroupLabel from "../components/home/MenuGroupLabel.vue";
 import CartIcon from "../components/icons/CartIcon.vue";
 import PaymentIcon from "../components/icons/PaymentIcon.vue";
-import BaseFloatingButton from "../components/base/BaseFloatingButton.vue";
-
 import DotIcon from "../components/icons/DotIcon.vue";
-import CheckoutItemList from "../components/checkout/CheckoutItemList.vue";
-import { useCarts } from "@/composables/useCarts";
 
 const { cart, fetchCart } = useCarts();
+const { formattedPrice } = usePriceFormatter();
+
 onMounted(fetchCart);
 </script>
 
@@ -35,7 +39,9 @@ onMounted(fetchCart);
 
               <div class="mt-10 flex items-center justify-between">
                 <p class="font-semibold text-sm text-primary">Total</p>
-                <p class="font-semibold text-sm text-primary">Rp 80.000</p>
+                <p class="font-semibold text-sm text-primary">
+                  {{ formattedPrice(cart.total) }}
+                </p>
               </div>
             </div>
           </div>
