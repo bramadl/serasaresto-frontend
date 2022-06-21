@@ -35,9 +35,9 @@ const total = computed<number>(() => {
   return order.value.total;
 });
 
-const pph = computed<number>(() => {
-  return (total.value * 11) / 100;
-});
+// const pph = computed<number>(() => {
+//   return (total.value * 11) / 100;
+// });
 
 const orderId = computed(() => {
   return route.params.id as string;
@@ -102,26 +102,26 @@ const onConfirm = async () => {
               </ul>
 
               <div class="flex flex-col gap-4 mt-10">
-                <div class="flex items-center justify-between">
+                <!-- <div class="flex items-center justify-between">
                   <p class="text-sm text-secondary">Subtotal</p>
                   <p class="text-sm text-secondary">
                     {{ formattedPrice(total) }}
                   </p>
-                </div>
-                <div class="flex items-center justify-between">
+                </div> -->
+                <!-- <div class="flex items-center justify-between">
                   <p class="text-sm text-secondary">Pajak (11%)</p>
                   <p class="text-sm text-secondary">
                     {{ formattedPrice(pph) }}
                   </p>
-                </div>
-                <div class="flex items-center justify-between">
+                </div> -->
+                <!-- <div class="flex items-center justify-between">
                   <p class="text-sm text-secondary">Diskon (Rp)</p>
                   <p class="text-sm text-secondary">Rp 0</p>
-                </div>
+                </div> -->
                 <div class="flex items-center justify-between">
                   <p class="font-medium text-lg text-primary">Total</p>
                   <p class="font-medium text-lg text-primary">
-                    {{ formattedPrice(total + pph) }}
+                    {{ formattedPrice(total) }}
                   </p>
                 </div>
               </div>

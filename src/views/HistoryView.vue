@@ -81,41 +81,43 @@ const parseDate = (date: Date) => {
             <div
               v-for="order in orders"
               :key="order.id"
-              class="bg-white rounded-lg p-6"
+              class="bg-white rounded-lg p-6 border border-transparent hover:border-green transition ease-out duration-300"
               style="box-shadow: 2px 0px 16px 0px #012f2d0a"
             >
-              <div class="flex flex-col gap-6">
-                <div class="w-full flex items-center justify-between">
-                  <div>
-                    <RouterLink
-                      :to="{ name: 'status', params: { id: order.id } }"
-                      class="font-bold text-primary hover:text-green"
+              <RouterLink
+                class="block"
+                :to="{ name: 'status', params: { id: order.id } }"
+              >
+                <div class="flex flex-col gap-6">
+                  <div class="w-full flex items-center justify-between">
+                    <div>
+                      <p class="font-bold text-primary">
+                        Order {{ parseOrderNumber(order.number) }}
+                      </p>
+                      <p class="font-light text-sm text-secondary">
+                        {{ parseDate(order.created_at as Date) }}
+                      </p>
+                    </div>
+                    <BaseStatusBadge :success="order.status === 'DONE'" />
+                  </div>
+
+                  <ul class="flex flex-col gap-8">
+                    <li
+                      v-for="orderDetail in order.details"
+                      :key="orderDetail.menu.id"
                     >
-                      Order {{ parseOrderNumber(order.number) }}
-                    </RouterLink>
-                    <p class="font-light text-sm text-secondary">
-                      {{ parseDate(order.created_at as Date) }}
+                      <CheckoutItemList :cart-item="orderDetail" type="order" />
+                    </li>
+                  </ul>
+
+                  <div class="flex items-center justify-between">
+                    <p class="font-semibold text-sm text-primary">Total</p>
+                    <p class="font-semibold text-sm text-primary">
+                      {{ formattedPrice(order.total) }}
                     </p>
                   </div>
-                  <BaseStatusBadge :success="order.status === 'DONE'" />
                 </div>
-
-                <ul class="flex flex-col gap-8">
-                  <li
-                    v-for="orderDetail in order.details"
-                    :key="orderDetail.menu.id"
-                  >
-                    <CheckoutItemList :cart-item="orderDetail" type="order" />
-                  </li>
-                </ul>
-
-                <div class="flex items-center justify-between">
-                  <p class="font-semibold text-sm text-primary">Total</p>
-                  <p class="font-semibold text-sm text-primary">
-                    {{ formattedPrice(order.total) }}
-                  </p>
-                </div>
-              </div>
+              </RouterLink>
             </div>
           </div>
         </section>
