@@ -143,7 +143,7 @@ const onConfirm = async () => {
   >
     <RouterLink
       to="/"
-      class="flex-1 text-center py-3 px-4 rounded-lg bg-transparent text-green border-2 border-green"
+      class="flex-1 text-center py-3 px-4 rounded-lg bg-white text-green border-2 border-green"
     >
       Kembali Ke Menu
     </RouterLink>
