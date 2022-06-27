@@ -55,13 +55,13 @@ defineEmits<{
                 as="h3"
                 class="flex items-center justify-center font-semibold text-xl text-white bg-green h-12"
               >
-                Konfirmasi Pesanan
+                Konfirmasi Pembayaran
               </DialogTitle>
 
               <div class="p-4">
-                <p class="mt-2 mb-12 text-sm text-primary">
-                  Konfirmasi <strong>semua</strong> pesanan sesuai dan telah
-                  diantar ke meja anda. Aksi ini tidak dapat diubah. Lanjutkan?
+                <p>
+                  Menu yang telah dipesan tidak dapat diubah. Lanjutkan
+                  Pembayaran?
                 </p>
 
                 <div class="mt-4 flex items-center justify-end gap-4">
@@ -72,10 +72,10 @@ defineEmits<{
                     Batal
                   </button>
                   <button
-                    class="block border border-green bg-green text-sm text-white font-medium w-[128px] h-10 rounded-lg"
+                    class="block border border-green bg-green text-sm text-white font-medium w-[100px] h-10 rounded-lg"
                     @click="$emit('confirm')"
                   >
-                    Ya, Lanjutkan
+                    OK
                   </button>
                 </div>
               </div>

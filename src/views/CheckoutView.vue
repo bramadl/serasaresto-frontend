@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted } from "vue";
+import { onMounted, ref } from "vue";
 import { RouterLink, useRouter } from "vue-router";
 
 import { $orderService } from "@/api";
@@ -13,12 +13,14 @@ import BaseFloatingButton from "../components/base/BaseFloatingButton.vue";
 import CheckoutItemList from "../components/checkout/CheckoutItemList.vue";
 import MenuGroupLabel from "../components/home/MenuGroupLabel.vue";
 import CartIcon from "../components/icons/CartIcon.vue";
-import PaymentIcon from "../components/icons/PaymentIcon.vue";
 import DotIcon from "../components/icons/DotIcon.vue";
+import ConfirmModal from "../components/checkout/ConfirmModal.vue";
 
 const { cart, fetchCart } = useCarts();
 const { formattedPrice } = usePriceFormatter();
 const router = useRouter();
+
+const isOpen = ref(false);
 
 const onMakeOrder = async () => {
   try {
@@ -27,6 +29,8 @@ const onMakeOrder = async () => {
     router.replace({ name: "status", params: { id: orderId } });
   } catch (err) {
     alertErrorResponse(err);
+  } finally {
+    isOpen.value = false;
   }
 };
 
@@ -80,19 +84,23 @@ onMounted(fetchCart);
             <div class="flex items-center justify-between text-sm">
               <div class="flex items-center gap-2">
                 <DotIcon />
-                <p class="font-semibold text-primary">Tunai</p>
+                <p class="font-semibold text-primary">E-Wallet</p>
               </div>
-              <PaymentIcon fill="#717A7A" />
             </div>
           </div>
         </section>
       </div>
     </div>
+
+    <ConfirmModal
+      :is-open="isOpen"
+      @close="isOpen = false"
+      @confirm="onMakeOrder"
+    />
   </HomeLayout>
 
   <template v-if="cart.cartItems.length">
-    <BaseFloatingButton @click="onMakeOrder">
-      <PaymentIcon />
+    <BaseFloatingButton @click="isOpen = true">
       <span class="font-semibold text-white text-sm">
         Lanjutkan Pembayaran
       </span>
