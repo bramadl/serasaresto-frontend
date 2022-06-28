@@ -46,7 +46,7 @@ export function useMenu() {
           data: { menu: foodsMenu, pagination: foodsPaginationResponse },
         },
       } = await $menuService.getMenus(
-        `search=${search.value}&per_page=${perPage.value}&page=${foodPage.value}`
+        `search=${search.value}&per_page=100&page=1`
       );
 
       const {
@@ -54,7 +54,7 @@ export function useMenu() {
           data: { menu: drinksMenu, pagination: drinksPaginationResponse },
         },
       } = await $menuService.getMenus(
-        `search=${search.value}&per_page=${perPage.value}&page=${drinkPage.value}&type=minuman`
+        `search=${search.value}&per_page=100&page=1&type=minuman`
       );
 
       foods.value = foodsMenu;

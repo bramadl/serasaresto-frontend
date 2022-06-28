@@ -12,7 +12,7 @@ import SearchMenuInput from "../components/home/SearchMenuInput.vue";
 import FoodsIcon from "../components/icons/FoodsIcon.vue";
 import DrinkIcon from "../components/icons/DrinkIcon.vue";
 import MenuGroupLabel from "../components/home/MenuGroupLabel.vue";
-import LoadMoreMenuButton from "../components/home/LoadMoreMenuButton.vue";
+// import LoadMoreMenuButton from "../components/home/LoadMoreMenuButton.vue";
 import MenuCard from "../components/home/MenuCard.vue";
 import CartIcon from "../components/icons/CartIcon.vue";
 import BaseFloatingButton from "../components/base/BaseFloatingButton.vue";
@@ -20,21 +20,21 @@ import BaseFloatingButton from "../components/base/BaseFloatingButton.vue";
 const {
   drinks,
   foods,
-  drinksPagination,
-  foodsPagination,
+  // drinksPagination,
+  // foodsPagination,
   search,
   setSearch,
-  incrementPage,
+  // incrementPage,
 } = useMenu();
 const { cart, fetchCart, onAddItem, onRemoveItem } = useCarts();
 const { formattedPrice } = usePriceFormatter();
 
-const hasMoreFoods = computed<boolean>(() => {
-  return foodsPagination.value.hasNextItems as boolean;
-});
-const hasMoreDrinks = computed<boolean>(() => {
-  return drinksPagination.value.hasNextItems as boolean;
-});
+// const hasMoreFoods = computed<boolean>(() => {
+//   return foodsPagination.value.hasNextItems as boolean;
+// });
+// const hasMoreDrinks = computed<boolean>(() => {
+//   return drinksPagination.value.hasNextItems as boolean;
+// });
 const hasCartItems = computed<boolean>(() => {
   return Boolean(cart.cartItems.length);
 });
@@ -75,10 +75,10 @@ onMounted(() => {
                 />
               </li>
             </ul>
-            <LoadMoreMenuButton
+            <!-- <LoadMoreMenuButton
               v-if="hasMoreFoods"
               @click="() => incrementPage('food')"
-            />
+            /> -->
           </div>
 
           <div v-if="drinks.length" class="flex flex-col gap-8">
@@ -92,10 +92,10 @@ onMounted(() => {
                 />
               </li>
             </ul>
-            <LoadMoreMenuButton
+            <!-- <LoadMoreMenuButton
               v-if="hasMoreDrinks"
               @click="() => incrementPage('drink')"
-            />
+            /> -->
           </div>
         </section>
       </div>
